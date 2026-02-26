@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Add Product</h2>
+
+    <!-- IMPORTANT: enctype is required for image upload -->
+    <form method="POST" enctype="multipart/form-data">
+
+        <input type="text"
+               name="name"
+               placeholder="Product Name"
+               class="form-control mb-3"
+               required>
+
+        <input type="text"
+               name="description"
+               placeholder="Description"
+               class="form-control mb-3"
+               required>
+
+        <input type="number"
+               step="0.01"
+               name="price"
+               placeholder="Price"
+               class="form-control mb-3"
+               required>
+
+        <input type="number"
+               name="stock"
+               placeholder="Stock"
+               class="form-control mb-3"
+               required>
+
+        <!-- CATEGORY DROPDOWN -->
+        <select name="category"
+                class="form-control mb-3"
+                required>
+            <option value="">Select Category</option>
+            <option>Vegetables</option>
+            <option>Fruits</option>
+            <option>Dairy Products</option>
+            <option>Frozen Non-Veg</option>
+            <option>Soft Drinks</option>
+            <option>Snacks</option>
+            <option>Rice & Pulses</option>
+            <option>Cooking Oils</option>
+            <option>Personal Care</option>
+            <option>Cleaning Supplies</option>
+            <option>Chocolates</option>
+            <option>Baby Products</option>
+        </select>
+
+        <!-- IMAGE UPLOAD -->
+        <input type="file"
+               name="image"
+               class="form-control mb-4"
+               accept=".jpg,.jpeg,.png,.webp"
+               required>
+
+        <button class="btn btn-success w-100">
+            Add Product
+        </button>
+
+    </form>
+</div>
+
+{% endblock %}

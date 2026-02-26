@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<div class="container mt-4 mb-5 animate-fade-in">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold mb-0 text-white">🛠 Admin Dashboard</h2>
+    <div class="text-end">
+      <a href="/add_product" class="btn btn-primary shadow-sm">
+        <i class="fas fa-plus"></i> Add New Product
+      </a>
+    </div>
+  </div>
+
+  <!-- Stats Overview (Optional but looks good) -->
+  <div class="row g-4 mb-5">
+    <div class="col-md-6">
+      <div class="card glass p-4 h-100">
+        <div class="d-flex align-items-center">
+          <div class="bg-primary bg-opacity-10 p-3 rounded-circle me-3">
+            <i class="fas fa-box text-primary fa-2x"></i>
+          </div>
+          <div>
+            <h6 class="text-secondary mb-0">Total Products</h6>
+            <h3 class="fw-bold mb-0 text-white">{{ products|length }}</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card glass p-4 h-100">
+        <div class="d-flex align-items-center">
+          <div class="bg-success bg-opacity-10 p-3 rounded-circle me-3">
+            <i class="fas fa-shopping-cart text-success fa-2x"></i>
+          </div>
+          <div>
+            <h6 class="text-secondary mb-0">Orders Received</h6>
+            <h3 class="fw-bold mb-0 text-white">{{ orders|length }}</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= PRODUCTS SECTION ================= -->
+  <div class="card glass shadow-sm mb-5 p-0 overflow-hidden">
+    <div class="card-header bg-dark text-white py-3 border-0">
+      <i class="fas fa-boxes me-2"></i> Product Management
+    </div>
+
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="bg-light">
+            <tr>
+              <th class="ps-4">ID</th>
+              <th>Image</th>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Price</th>
+              <th>Stock</th>
+              <th class="pe-4 text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for product in products %}
+            <tr>
+              <td class="ps-4">{{ product.id }}</td>
+              <td>
+                {% if product.image %}
+                {% if product.image.startswith('http') %}
+                <img src="{{ product.image }}" class="rounded shadow-sm" width="50" height="50"
+                  style="object-fit:cover;">
+                {% else %}
+                <img src="{{ url_for('static', filename='images/' + product.image) }}" class="rounded shadow-sm"
+                  width="50" height="50" style="object-fit:cover;">
+                {% endif %}
+                {% else %}
+                <div class="bg-light rounded d-flex align-items-center justify-content-center"
+                  style="width:50px; height:50px;">
+                  <i class="fas fa-image text-muted"></i>
+                </div>
+                {% endif %}
+              </td>
+              <td class="fw-medium text-white">{{ product.name }}</td>
+              <td><span class="badge border text-secondary" style="background: rgba(255,255,255,0.05);">{{
+                  product.category }}</span></td>
+              <td class="text-primary fw-bold">₹{{ "%.2f"|format(product.price) }}</td>
+              <td>
+                {% if product.stock > 0 %}
+                <span class="badge bg-success-subtle text-success px-3">{{ product.stock }}</span>
+                {% else %}
+                <span class="badge bg-danger-subtle text-danger px-3">Out of Stock</span>
+                {% endif %}
+              </td>
+              <td class="pe-4 text-center">
+                <div class="btn-group">
+                  <a href="/edit_product/{{ product.id }}" class="btn btn-sm btn-outline-primary">
+                    <i class="fas fa-edit"></i> Edit
+                  </a>
+                  <a href="/delete_product/{{ product.id }}" class="btn btn-sm btn-outline-danger"
+                    onclick="return confirm('Delete this product?')">
+                    <i class="fas fa-trash"></i>
+                  </a>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= ORDERS SECTION ================= -->
+  <div class="card glass shadow-sm p-0 overflow-hidden">
+    <div class="card-header bg-primary text-white py-3 border-0">
+      <i class="fas fa-receipt me-2"></i> Recent Orders
+    </div>
+
+    <div class="card-body p-0">
+      {% if orders %}
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="bg-light">
+            <tr>
+              <th class="ps-4">Order ID</th>
+              <th>User ID</th>
+              <th>Total Amount</th>
+              <th>Order Date</th>
+              <th class="pe-4 text-center">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for order in orders %}
+            <tr>
+              <td class="ps-4 fw-bold">#{{ order.id }}</td>
+              <td><i class="fas fa-user-circle me-1 text-secondary"></i> {{ order.user_id }}</td>
+              <td class="text-success fw-bold">₹{{ "%.2f"|format(order.total) }}</td>
+              <td>{{ order.created_at.strftime("%d %b, %Y %I:%M %p") }}</td>
+              <td class="pe-4 text-center">
+                <span class="badge bg-info-subtle text-info px-3">Completed</span>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="text-center py-5">
+        <i class="fas fa-history fa-3x text-secondary mb-3 opacity-50"></i>
+        <p class="text-secondary">No orders have been placed yet.</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}

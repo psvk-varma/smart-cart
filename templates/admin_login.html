@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<div class="auth-wrapper admin-login-bg">
+  <div class="auth-card glass-dark animate-up shadow-lg">
+    <div class="text-center mb-4">
+      <div class="display-6 mb-2 text-warning"><i class="fas fa-user-shield"></i></div>
+      <h2 class="fw-bold text-white mb-1">Admin Panel</h2>
+      <p class="text-warning small opacity-75">Secure Administrator Access</p>
+    </div>
+
+    <form method="POST">
+      <div class="mb-3">
+        <label class="form-label small fw-bold text-uppercase opacity-75 text-white">
+          <i class="fas fa-id-card me-1"></i> Admin Email
+        </label>
+        <input type="email" name="email" placeholder="admin@smartcart.com"
+          class="form-control bg-transparent text-white border-secondary" required>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label small fw-bold text-uppercase opacity-75 text-white">
+          <i class="fas fa-key me-1"></i> Secret Password
+        </label>
+        <input type="password" name="password" placeholder="••••••••"
+          class="form-control bg-transparent text-white border-secondary" required>
+      </div>
+
+      <button class="btn btn-warning w-100 py-3 fw-bold shadow-sm mb-3">
+        Enter Dashboard <i class="fas fa-door-open ms-1"></i>
+      </button>
+
+      <div class="text-center mt-3 pt-3 border-top border-secondary">
+        <a href="/" class="text-decoration-none small text-warning opacity-75">
+          <i class="fas fa-arrow-left me-1"></i> Back to Storefront
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
