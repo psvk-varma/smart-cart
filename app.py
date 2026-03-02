@@ -19,14 +19,49 @@ app.config.from_object(Config)
 app.permanent_session_lifetime = timedelta(days=7)
 
 # ================= IMAGE CONFIG =================
-UPLOAD_FOLDER = os.path.join(os.getcwd(), 'static/images')
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['UPLOAD_FOLDER'] = "/tmp"
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
 
 db.init_app(app)
 
 with app.app_context():
     db.create_all()
+
+    # ✅ SEED ONLY IF EMPTY
+    if Product.query.count() == 0:
+
+        products_data = [
+            # (Name, Description, Price, Stock, Category, Image)
+            ("Organic Tomatoes", "Fresh red organic tomatoes per kg", 60.0, 20, "Vegetables", "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=500&q=80"),
+            ("Broccoli", "High protein fresh broccoli", 45.0, 0, "Vegetables", "https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?w=500&q=80"),
+            ("Carrots", "Sweet and crunchy orange carrots", 30.0, 15, "Vegetables", "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=500&q=80"),
+            ("Alphonso Mango", "King of mangoes 1kg pack", 450.0, 10, "Fruits", "https://images.unsplash.com/photo-1553279768-865429fa0078?w=500&q=80"),
+            ("Bananas", "Fresh yellow ripe bananas 1 dozen", 60.0, 25, "Fruits", "https://images.unsplash.com/photo-1571771894821-ad9902ed120c?w=500&q=80"),
+            ("Strawberries", "Fresh red mountain strawberries", 120.0, 0, "Fruits", "https://images.unsplash.com/photo-1464965911861-746a04b01ca6?w=500&q=80"),
+            ("Amul Gold Milk", "Full cream milk 1 Litre", 66.0, 30, "Dairy Products", "https://images.unsplash.com/photo-1563636619-e910009355bb?w=500&q=80"),
+            ("Greek Yogurt", "Plain high protein greek yogurt 500g", 180.0, 12, "Dairy Products", "https://images.unsplash.com/photo-1488477181946-6428a0291777?w=500&q=80"),
+            ("Chicken Sausages", "Classic smoked chicken sausages", 220.0, 8, "Frozen Non-Veg", "https://images.unsplash.com/photo-1544025162-d76694265947?w=500&q=80"),
+            ("Frozen Prawns", "Cleaned and deveined prawns 500g", 550.0, 5, "Frozen Non-Veg", "https://images.unsplash.com/photo-1559742811-822873691df8?w=500&q=80"),
+            ("Mountain Dew", "Citrus flavoured cold drink 750ml", 45.0, 0, "Soft Drinks", "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=500&q=80"),
+            ("Sparkling Water", "Refreshing citrus sparkling water", 90.0, 18, "Soft Drinks", "https://images.unsplash.com/photo-1551713437-01314fba00d3?w=500&q=80"),
+            ("Pringles Onion", "Sour cream and onion chips", 110.0, 14, "Snacks", "https://images.unsplash.com/photo-1566478989037-eec170784d0b?w=500&q=80"),
+            ("Doritos Nachos", "Classic cheese nacho chips", 50.0, 20, "Snacks", "https://images.unsplash.com/photo-1600952841320-db92ec4047ca?w=500&q=80"),
+            ("Oreo Cookies", "Chocolate sandwich cookies 120g", 35.0, 0, "Snacks", "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80"),
+        ]
+
+        for name, desc, price, stock, cat, img in products_data:
+            p = Product(
+                name=name,
+                description=desc,
+                price=price,
+                stock=stock,
+                category=cat,
+                image=img
+            )
+            db.session.add(p)
+
+        db.session.commit()
+        print("Database seeded with products!")
 
 serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 
